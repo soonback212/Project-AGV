@@ -73,6 +73,9 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 - `a/d`: 좌회전 / 우회전  
 - `x`: 정지
 
+teleop_twist_keyboard 실행 시 xterm: not found 에러가 발생하면 아래 명령어로 설치하세요:
+
+sudo apt install xterm
 ---
 
 ## 🧰 통신 구조도
