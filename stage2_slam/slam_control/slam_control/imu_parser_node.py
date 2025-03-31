@@ -5,7 +5,7 @@ import struct
 from sensor_msgs.msg import Imu
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Quaternion, TransformStamped
-import tf_transformations
+from scipy.spatial.transform import Rotation as R
 import tf2_ros
 import time
 import math
@@ -81,7 +81,8 @@ class IMUParserNode(Node):
                 odom_msg.pose.pose.position.y = self.y
                 odom_msg.pose.pose.position.z = 0.0
 
-                q = tf_transformations.quaternion_from_euler(0, 0, self.th)
+                r = R.from_euler('z', self.th)
+                q = r.as_quat()  # [x, y, z, w]
                 odom_msg.pose.pose.orientation = Quaternion(x=q[0], y=q[1], z=q[2], w=q[3])
 
                 odom_msg.twist.twist.linear.x = d / dt
