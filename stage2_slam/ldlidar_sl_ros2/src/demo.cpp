@@ -39,7 +39,6 @@ public:
     this->get_parameter("baudrate", baudrate_);
     this->get_parameter("frame_id", frame_id_);
 
-    // 퍼블리셔
     scan_pub_ = this->create_publisher<sensor_msgs::msg::LaserScan>("scan", 10);
 
     // 드라이버 생성 및 초기화
@@ -59,39 +58,49 @@ public:
 
 private:
   void publishScan() {
-    ldlidar::LaserScan scan_data;
-    if (driver_->GetLaserScanData(scan_data, 1500) == ldlidar::LidarStatus::NORMAL) {
+    ldlidar::Points2D scan_points;
+    if (driver_->GetLaserScanData(scan_points, 1500) == ldlidar::LidarStatus::NORMAL) {
       auto msg = std::make_shared<sensor_msgs::msg::LaserScan>();
       rclcpp::Time now = this->now();
       msg->header.stamp = now;
       msg->header.frame_id = frame_id_;
 
-      if (scan_data.points.empty()) return;
+      if (scan_points.empty()) return;
 
-      float angle_min = scan_data.points.front().angle * M_PI / 180.0;
-      float angle_max = scan_data.points.back().angle * M_PI / 180.0;
-      size_t point_count = scan_data.points.size();
+      float angle_min = scan_points.front().angle * M_PI / 180.0;
+      float angle_max = scan_points.back().angle * M_PI / 180.0;
+      size_t point_count = scan_points.size();
 
       msg->angle_min = angle_min;
       msg->angle_max = angle_max;
       msg->angle_increment = (angle_max - angle_min) / point_count;
-      msg->time_increment = 0.0; // 사용 가능하면 설정
+      msg->time_increment = 0.0;
       msg->scan_time = 0.1;
       msg->range_min = 0.05;
       msg->range_max = 12.0;
 
-      for (const auto& pt : scan_data.points) {
-        msg->ranges.push_back(static_cast<float>(pt.distance) / 1000.0);
-        msg->intensities.push_back(static_cast<float>(pt.intensity));
+      for (const auto& pt : scan_points) {
+        float range = static_cast<float>(pt.distance) / 1000.0f;
+        float intensity = static_cast<float>(pt.intensity);
+
+        if (pt.distance == 0 && pt.intensity == 0) {
+          range = std::numeric_limits<float>::quiet_NaN();
+          intensity = std::numeric_limits<float>::quiet_NaN();
+        }
+
+        msg->ranges.push_back(range);
+        msg->intensities.push_back(intensity);
       }
 
       scan_pub_->publish(*msg);
+    } else {
+      RCLCPP_WARN(this->get_logger(), "스캔 데이터 수신 실패 또는 타임아웃");
     }
   }
 
   uint64_t getTimestamp() {
     rclcpp::Time now = this->get_clock()->now();
-    return static_cast<uint64_t>(now.nanoseconds() / 1000);  // us
+    return static_cast<uint64_t>(now.nanoseconds() / 1000);  // 마이크로초 단위
   }
 
   std::unique_ptr<ldlidar::LDLidarDriver> driver_;
