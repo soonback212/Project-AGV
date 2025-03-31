@@ -12,13 +12,13 @@ find_package(std_msgs REQUIRED)
 # 정확한 헤더 경로들 포함
 include_directories(
   include
-  ldlidar_driver/include/core/ldlidar_datatype.h
-  ldlidar_driver/include/core/ldlidar_driver.h
-  ldlidar_driver/include/dataprocess/lipkg.h
-  ldlidar_driver/include/filter/tofbf.h
-  ldlidar_driver/include/logger/log_module/h
-  ldlidar_driver/include/networkcom/network_socket_interface_linux.h
-  ldlidar_driver/include/serialcom/serial_interface_linux.h
+  ldlidar_driver/include
+  ldlidar_driver/include/core
+  ldlidar_driver/include/dataprocess
+  ldlidar_driver/include/filter
+  ldlidar_driver/include/logger
+  ldlidar_driver/include/networkcom
+  ldlidar_driver/include/serialcom
 )
 
 add_executable(ldlidar_node 
