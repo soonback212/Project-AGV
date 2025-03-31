@@ -1,10 +1,10 @@
 #include "tb6612_motor.h"
 #include <Wire.h>
-#include "MPU9250.h"  // MPU6500과 호환 가능
+#include "MPU9250.h"  // MPU6500 호환
 
-// 모터 정의: 왼쪽(M1), 오른쪽(M2)
-SPDMotor* motorL = new SPDMotor(18, 31, true, 12, 35, 34);  // M1
-SPDMotor* motorR = new SPDMotor(19, 38, false, 8, 37, 36);  // M2
+// 모터 정의 (왼쪽: M1, 오른쪽: M2)
+SPDMotor* motorL = new SPDMotor(18, 31, true, 12, 35, 34);
+SPDMotor* motorR = new SPDMotor(19, 38, false, 8, 37, 36);
 
 // IMU 객체
 MPU9250 mpu;
@@ -16,10 +16,32 @@ MPU9250 mpu;
 #define TURN_RIGHT  4
 #define STOP        5
 
-// Endian 변환용 함수 (Big Endian 전송)
+// 보낼 패킷 간격 (ms)
+unsigned long last_send = 0;
+const unsigned long send_interval = 50;
+
 void sendInt16BE(int16_t value) {
-  Serial.write((uint8_t)((value >> 8) & 0xFF));  // MSB
-  Serial.write((uint8_t)(value & 0xFF));         // LSB
+  Serial.write((value >> 8) & 0xFF);  // MSB
+  Serial.write(value & 0xFF);         // LSB
+}
+
+void send_sensor_packet() {
+  int16_t ax = mpu.getAccX() * 1000;
+  int16_t ay = mpu.getAccY() * 1000;
+  int16_t az = mpu.getAccZ() * 1000;
+  int16_t gx = mpu.getGyroX() * 1000;
+  int16_t gy = mpu.getGyroY() * 1000;
+  int16_t gz = mpu.getGyroZ() * 1000;
+
+  int16_t mx = 0, my = 0, mz = 0;         // 자기장 값 없음
+  int16_t enc_l = 0, enc_r = 0;           // 인코더 없음
+
+  Serial.write(0xF5); Serial.write(0xF5); // 헤더
+
+  sendInt16BE(ax); sendInt16BE(ay); sendInt16BE(az);
+  sendInt16BE(gx); sendInt16BE(gy); sendInt16BE(gz);
+  sendInt16BE(mx); sendInt16BE(my); sendInt16BE(mz);
+  sendInt16BE(enc_l); sendInt16BE(enc_r);
 }
 
 void setup() {
@@ -28,7 +50,7 @@ void setup() {
   delay(2000);
 
   if (!mpu.setup(0x68)) {
-    while (1); // IMU 연결 실패 시 정지
+    while (1);  // IMU 연결 실패
   }
 }
 
@@ -39,10 +61,8 @@ void turn_left(int speed)   { motorL->speed(-speed); motorR->speed(speed); }
 void turn_right(int speed)  { motorL->speed(speed);  motorR->speed(-speed); }
 void stop_motors()          { motorL->hardStop();    motorR->hardStop(); }
 
-unsigned long last_send = 0;
-
 void loop() {
-  // 모터 제어 패킷 수신
+  // 1. 모터 제어 명령 수신
   if (Serial.available() >= 5) {
     byte header1 = Serial.read();
     byte header2 = Serial.read();
@@ -62,34 +82,11 @@ void loop() {
     }
   }
 
-  // IMU 센서 패킷 전송 (50ms마다)
-  if (millis() - last_send >= 50) {
+  // 2. 센서 패킷 전송 (50ms 간격)
+  if (millis() - last_send >= send_interval) {
     last_send = millis();
-
     if (mpu.update()) {
-      // 센서값 읽기 및 단위 변환 (m/s^2 → mm/s^2, rad/s → mrad/s)
-      int16_t ax = mpu.getAccX() * 1000;
-      int16_t ay = mpu.getAccY() * 1000;
-      int16_t az = mpu.getAccZ() * 1000;
-      int16_t gx = mpu.getGyroX() * 1000;
-      int16_t gy = mpu.getGyroY() * 1000;
-      int16_t gz = mpu.getGyroZ() * 1000;
-
-      // 아직 안 쓰는 값은 0으로 채움
-      int16_t mx = 0;
-      int16_t my = 0;
-      int16_t mz = 0;
-      int16_t enc_l = 0;
-      int16_t enc_r = 0;
-
-      // 패킷 전송
-      Serial.write(0xF5);  // 헤더1
-      Serial.write(0xF5);  // 헤더2
-
-      sendInt16BE(ax); sendInt16BE(ay); sendInt16BE(az);
-      sendInt16BE(gx); sendInt16BE(gy); sendInt16BE(gz);
-      sendInt16BE(mx); sendInt16BE(my); sendInt16BE(mz);
-      sendInt16BE(enc_l); sendInt16BE(enc_r);
+      send_sensor_packet();
     }
   }
 }
