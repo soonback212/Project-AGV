@@ -16,6 +16,12 @@ MPU9250 mpu;
 #define TURN_RIGHT  4
 #define STOP        5
 
+// Endian 변환용 함수 (Big Endian 전송)
+void sendInt16BE(int16_t value) {
+  Serial.write((uint8_t)((value >> 8) & 0xFF));  // MSB
+  Serial.write((uint8_t)(value & 0xFF));         // LSB
+}
+
 void setup() {
   Serial.begin(115200);
   Wire.begin();
@@ -56,30 +62,35 @@ void loop() {
     }
   }
 
-  // 센서 데이터 전송 (50ms마다)
+  // IMU 센서 패킷 전송 (50ms마다)
   if (millis() - last_send >= 50) {
     last_send = millis();
+
     if (mpu.update()) {
-      float ax = mpu.getAccX();
-      float ay = mpu.getAccY();
-      float az = mpu.getAccZ();
+      // 센서값 읽기 및 단위 변환 (m/s^2 → mm/s^2, rad/s → mrad/s)
+      int16_t ax = mpu.getAccX() * 1000;
+      int16_t ay = mpu.getAccY() * 1000;
+      int16_t az = mpu.getAccZ() * 1000;
+      int16_t gx = mpu.getGyroX() * 1000;
+      int16_t gy = mpu.getGyroY() * 1000;
+      int16_t gz = mpu.getGyroZ() * 1000;
 
-      float gx = mpu.getGyroX();
-      float gy = mpu.getGyroY();
-      float gz = mpu.getGyroZ();
+      // 아직 안 쓰는 값은 0으로 채움
+      int16_t mx = 0;
+      int16_t my = 0;
+      int16_t mz = 0;
+      int16_t enc_l = 0;
+      int16_t enc_r = 0;
 
-      // 예: F5 F5 S1 ax ay az gx gy gz (10바이트)
-      Serial.write(0xF5); Serial.write(0xF5);
-      Serial.write(0xA1);  // 센서 헤더 (가상 정의)
+      // 패킷 전송
+      Serial.write(0xF5);  // 헤더1
+      Serial.write(0xF5);  // 헤더2
 
-      // 가속도 값 전송 (int16으로 축소)
-      Serial.write((int16_t)(ax * 1000) >> 8); Serial.write((int16_t)(ax * 1000) & 0xFF);
-      Serial.write((int16_t)(ay * 1000) >> 8); Serial.write((int16_t)(ay * 1000) & 0xFF);
-      Serial.write((int16_t)(az * 1000) >> 8); Serial.write((int16_t)(az * 1000) & 0xFF);
-
-      Serial.write((int16_t)(gx * 1000) >> 8); Serial.write((int16_t)(gx * 1000) & 0xFF);
-      Serial.write((int16_t)(gy * 1000) >> 8); Serial.write((int16_t)(gy * 1000) & 0xFF);
-      Serial.write((int16_t)(gz * 1000) >> 8); Serial.write((int16_t)(gz * 1000) & 0xFF);
+      sendInt16BE(ax); sendInt16BE(ay); sendInt16BE(az);
+      sendInt16BE(gx); sendInt16BE(gy); sendInt16BE(gz);
+      sendInt16BE(mx); sendInt16BE(my); sendInt16BE(mz);
+      sendInt16BE(enc_l); sendInt16BE(enc_r);
     }
   }
 }
+
