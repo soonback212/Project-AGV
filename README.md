@@ -4,3 +4,4 @@
 terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
   what():  failed to create guard condition: the given context is not valid, either rcl_init() was not called or rcl_shutdown() was called., at ./src/rcl/guard_condition.c:67
 [ros2run]: Aborted
+[ldlidar_sl_ros2.zip](https://github.com/user-attachments/files/19529410/ldlidar_sl_ros2.zip)
