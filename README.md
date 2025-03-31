@@ -1,7 +1,28 @@
-[INFO] [1743389747.106311923] [ldlidar_node]: LDLiDAR Node Started
-[LDS][ERROR][Mon Mar 31 11:55:47 2025][/home/jdamr/agv_ws/src/Project-AGV-main/stage2_slam/ldlidar_stl_ros2/ldlidar_driver/src/core/ldlidar_driver.cpp][Start][79][get timestamp fuctional is not register.]
-[ERROR] [1743389747.114069355] [ldlidar_node]: LiDAR 연결 실패
-terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
-  what():  failed to create guard condition: the given context is not valid, either rcl_init() was not called or rcl_shutdown() was called., at ./src/rcl/guard_condition.c:67
-[ros2run]: Aborted
-[ldlidar_sl_ros2.zip](https://github.com/user-attachments/files/19529410/ldlidar_sl_ros2.zip)
+jdamr@jdamr-pc:~/agv_ws$ colcon build
+Starting >>> ldlidar_sl_ros2
+Starting >>> motor_serial
+Starting >>> slam_control
+Finished <<< slam_control [7.57s]                                   
+Finished <<< motor_serial [7.66s]                                   
+--- stderr: ldlidar_sl_ros2                               
+/home/jdamr/agv_ws/src/Project-AGV-main/stage2_slam/ldlidar_sl_ros2/src/demo.cpp: In member function ‘void LDLidarNode::publishScan()’:
+/home/jdamr/agv_ws/src/Project-AGV-main/stage2_slam/ldlidar_sl_ros2/src/demo.cpp:62:14: error: ‘LaserScan’ is not a member of ‘ldlidar’; did you mean ‘sensor_msgs::msg::LaserScan’?
+   62 |     ldlidar::LaserScan scan_data;
+      |              ^~~~~~~~~
+In file included from /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/laser_scan.hpp:7,
+                 from /home/jdamr/agv_ws/src/Project-AGV-main/stage2_slam/ldlidar_sl_ros2/src/demo.cpp:22:
+/opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/detail/laser_scan__struct.hpp:247:7: note: ‘sensor_msgs::msg::LaserScan’ declared here
+  247 | using LaserScan =
+      |       ^~~~~~~~~
+/home/jdamr/agv_ws/src/Project-AGV-main/stage2_slam/ldlidar_sl_ros2/src/demo.cpp:63:35: error: ‘scan_data’ was not declared in this scope
+   63 |     if (driver_->GetLaserScanData(scan_data, 1500) == ldlidar::LidarStatus::NORMAL) {
+      |                                   ^~~~~~~~~
+gmake[2]: *** [CMakeFiles/ldlidar_sl_ros2_node.dir/build.make:76: CMakeFiles/ldlidar_sl_ros2_node.dir/src/demo.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/ldlidar_sl_ros2_node.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2
+---
+Failed   <<< ldlidar_sl_ros2 [28.8s, exited with code 2]
+
+Summary: 2 packages finished [30.1s]
+  1 package failed: ldlidar_sl_ros2
+  1 package had stderr output: ldlidar_sl_ros2
