@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot name="agv_robot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Base Link -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.20 0.22 0.082"/> <!-- 가로 x 세로 x 높이 (단위: m) -->
+      </geometry>
+      <material name="gray">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.20 0.22 0.082"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </inertial>
+  </link>
+
+  <!-- IMU 센서 -->
+  <link name="imu_link"/>
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/> <!-- 정중앙 -->
+  </joint>
+
+  <!-- LiDAR 센서 -->
+  <link name="base_laser"/>
+  <joint name="laser_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="base_laser"/>
+    <origin xyz="-0.03 0 0.082" rpy="0 0 0"/> <!-- 뒤로 3cm, 위로 8.2cm -->
+  </joint>
+
+</robot>

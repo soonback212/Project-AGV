@@ -1,0 +1,60 @@
+Panels:
+  - Class: rviz/Displays
+    Name: Displays
+  - Class: rviz/Views
+    Name: Views
+
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Name: Global Options
+      Class: rviz/Displays
+      Fixed Frame: map
+
+    - Name: TF
+      Class: rviz/TF
+      Show Names: true
+
+    - Name: RobotModel
+      Class: rviz/RobotModel
+      Robot Description: robot_description
+
+    - Name: LaserScan
+      Class: rviz/LaserScan
+      Topic: /scan
+      Enabled: true
+      Queue Size: 10
+      Color: 255; 255; 255
+      Size (m): 0.03
+      Style: Flat Squares
+      Axis: Z
+
+    - Name: Odometry
+      Class: rviz/Odometry
+      Topic: /odom
+      Color: 0; 255; 255
+      Keep: 100
+
+    - Name: Map
+      Class: rviz/Map
+      Topic: /map
+      Alpha: 0.7
+      Color Scheme: map
+      Draw Behind: true
+
+  Name: root
+  Enabled: true
+  Tools:
+    - Class: rviz/MoveCamera
+    - Class: rviz/Interact
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/SetInitialPose
+    - Class: rviz/SetGoal
+
+Views:
+  Current:
+    Class: rviz/TopDownOrtho
+    Target Frame: map
+    Value: 10.0
