@@ -10,3 +10,16 @@ sudo apt install ros-humble-cartographer ros-humble-cartographer-ros-msgs
 cd ~/agv_ws
 colcon build --packages-select cartographer_ros
 source install/setup.bash
+
+
+jdamr@jdamr-pc:~/agv_ws/src$ sudo apt install ros-humble-cartographer ros-humble-cartographer-ros-msgs
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+ros-humble-cartographer is already the newest version (2.0.9003-1jammy.20241125.211935).
+ros-humble-cartographer-ros-msgs is already the newest version (2.0.9002-1jammy.20241128.021647).
+ros-humble-cartographer-ros-msgs set to manually installed.
+You might want to run 'apt --fix-broken install' to correct these.
+The following packages have unmet dependencies:
+ libsdformat9-dev : Depends: libsdformat9 (= 9.10.1-1~focal) but it is not going to be installed
+E: Unmet dependencies. Try 'apt --fix-broken install' with no packages (or specify a solution).
