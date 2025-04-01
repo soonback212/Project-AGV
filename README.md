@@ -1,4 +1,3 @@
-jdamr@jdamr-pc:~/agv_ws$ ros2 launch cartographer_agv agv_launch.py
-[INFO] [launch]: All log files can be found below /home/jdamr/.ros/log/2025-04-01-16-29-56-436180-jdamr-pc-33556
-[INFO] [launch]: Default logging verbosity is set to INFO
-[ERROR] [launch]: Caught exception in launch (see debug for traceback): executable 'cartigrapher_occupancy_grid_node' not found on the libexec directory '/opt/ros/humble/lib/cartographer_ros' 
+The class required for this panel, 'rviz/Displays', could not be loaded.
+Error:
+According to the loaded plugin descriptions the class rviz/Displays with base class type rviz_common::Panel does not exist. Declared types are nav2_rviz_plugins/Navigation 2 slam_toolbox::SlamToolboxPlugin
