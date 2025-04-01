@@ -20,6 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'imu_parser_node = slam_control.imu_parser_node:main',
+            'motor_serial_node = slam_control.motor_serial_node:main',
         ],
     },
 )
