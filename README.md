@@ -1,22 +1,23 @@
 jdamr@jdamr-pc:~/agv_ws$ /opt/ros/humble/lib/cartographer_ros/cartographer_node   -configuration_directory /home/jdamr/agv_ws/src/Project-AGV-main/stage2_slam/cartographer_agv/config   -configuration_basename agv.lua
-[INFO] [1743562321.964816492] [cartographer logger]: I0402 11:52:01.000000  5809 configuration_file_resolver.cc:41] Found '/home/jdamr/agv_ws/src/Project-AGV-main/stage2_slam/cartographer_agv/config/agv.lua' for 'agv.lua'.
-[INFO] [1743562321.965794886] [cartographer logger]: I0402 11:52:01.000000  5809 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/map_builder.lua' for 'map_builder.lua'.
-[INFO] [1743562321.965976664] [cartographer logger]: I0402 11:52:01.000000  5809 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/map_builder.lua' for 'map_builder.lua'.
-[INFO] [1743562321.966215092] [cartographer logger]: I0402 11:52:01.000000  5809 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/pose_graph.lua' for 'pose_graph.lua'.
-[INFO] [1743562321.966345018] [cartographer logger]: I0402 11:52:01.000000  5809 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/pose_graph.lua' for 'pose_graph.lua'.
-[INFO] [1743562321.966784298] [cartographer logger]: I0402 11:52:01.000000  5809 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/trajectory_builder.lua' for 'trajectory_builder.lua'.
-[INFO] [1743562321.966917243] [cartographer logger]: I0402 11:52:01.000000  5809 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/trajectory_builder.lua' for 'trajectory_builder.lua'.
-[INFO] [1743562321.967147004] [cartographer logger]: I0402 11:52:01.000000  5809 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/trajectory_builder_2d.lua' for 'trajectory_builder_2d.lua'.
-[INFO] [1743562321.967290616] [cartographer logger]: I0402 11:52:01.000000  5809 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/trajectory_builder_2d.lua' for 'trajectory_builder_2d.lua'.
-[INFO] [1743562321.967701692] [cartographer logger]: I0402 11:52:01.000000  5809 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/trajectory_builder_3d.lua' for 'trajectory_builder_3d.lua'.
-[INFO] [1743562321.967832637] [cartographer logger]: I0402 11:52:01.000000  5809 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/trajectory_builder_3d.lua' for 'trajectory_builder_3d.lua'.
-F0402 11:52:01.968422  5809 lua_parameter_dictionary.cc:399] Check failed: HasKey(key) Key 'lookup_transform_timeout_sec' not in dictionary:
+[INFO] [1743562575.507038564] [cartographer logger]: I0402 11:56:15.000000  5875 configuration_file_resolver.cc:41] Found '/home/jdamr/agv_ws/src/Project-AGV-main/stage2_slam/cartographer_agv/config/agv.lua' for 'agv.lua'.
+[INFO] [1743562575.508004625] [cartographer logger]: I0402 11:56:15.000000  5875 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/map_builder.lua' for 'map_builder.lua'.
+[INFO] [1743562575.508178459] [cartographer logger]: I0402 11:56:15.000000  5875 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/map_builder.lua' for 'map_builder.lua'.
+[INFO] [1743562575.508396535] [cartographer logger]: I0402 11:56:15.000000  5875 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/pose_graph.lua' for 'pose_graph.lua'.
+[INFO] [1743562575.508526128] [cartographer logger]: I0402 11:56:15.000000  5875 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/pose_graph.lua' for 'pose_graph.lua'.
+[INFO] [1743562575.509005630] [cartographer logger]: I0402 11:56:15.000000  5875 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/trajectory_builder.lua' for 'trajectory_builder.lua'.
+[INFO] [1743562575.509146575] [cartographer logger]: I0402 11:56:15.000000  5875 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/trajectory_builder.lua' for 'trajectory_builder.lua'.
+[INFO] [1743562575.509366984] [cartographer logger]: I0402 11:56:15.000000  5875 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/trajectory_builder_2d.lua' for 'trajectory_builder_2d.lua'.
+[INFO] [1743562575.509499929] [cartographer logger]: I0402 11:56:15.000000  5875 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/trajectory_builder_2d.lua' for 'trajectory_builder_2d.lua'.
+[INFO] [1743562575.509952006] [cartographer logger]: I0402 11:56:15.000000  5875 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/trajectory_builder_3d.lua' for 'trajectory_builder_3d.lua'.
+[INFO] [1743562575.510088562] [cartographer logger]: I0402 11:56:15.000000  5875 configuration_file_resolver.cc:41] Found '/opt/ros/humble/share/cartographer/configuration_files/trajectory_builder_3d.lua' for 'trajectory_builder_3d.lua'.
+F0402 11:56:15.515255  5875 lua_parameter_dictionary.cc:399] Check failed: HasKey(key) Key 'num_point_clouds' not in dictionary:
 {
   fixed_frame_pose_sampling_ratio = 1.000000,
   imu_sampling_ratio = 1.000000,
   imu_topic = "imu",
   landmarks_sampling_ratio = 1.000000,
   laser_scan_topic = "scan",
+  lookup_transform_timeout_sec = 0.200000,
   map_builder = {
     collate_by_trajectory = false,
     num_background_threads = 4.000000,
@@ -206,7 +207,6 @@ F0402 11:52:01.968422  5809 lua_parameter_dictionary.cc:399] Check failed: HasKe
         },
       },
       use_imu_data = true,
-      use_odometry = true,
       use_online_correlative_scan_matching = true,
       voxel_filter_size = 0.025000,
     },
@@ -297,14 +297,16 @@ F0402 11:52:01.968422  5809 lua_parameter_dictionary.cc:399] Check failed: HasKe
   use_imu_data = true,
   use_landmarks = false,
   use_nav_sat = false,
+  use_odometry = true,
 }
-[FATAL] [1743562321.972105826] [cartographer logger]: F0402 11:52:01.000000  5809 lua_parameter_dictionary.cc:399] Check failed: HasKey(key) Key 'lookup_transform_timeout_sec' not in dictionary:
+[FATAL] [1743562575.520873729] [cartographer logger]: F0402 11:56:15.000000  5875 lua_parameter_dictionary.cc:399] Check failed: HasKey(key) Key 'num_point_clouds' not in dictionary:
 {
   fixed_frame_pose_sampling_ratio = 1.000000,
   imu_sampling_ratio = 1.000000,
   imu_topic = "imu",
   landmarks_sampling_ratio = 1.000000,
   laser_scan_topic = "scan",
+  lookup_transform_timeout_sec = 0.200000,
   map_builder = {
     collate_by_trajectory = false,
     num_background_threads = 4.000000,
@@ -494,7 +496,6 @@ F0402 11:52:01.968422  5809 lua_parameter_dictionary.cc:399] Check failed: HasKe
         },
       },
       use_imu_data = true,
-      use_odometry = true,
       use_online_correlative_scan_matching = true,
       voxel_filter_size = 0.025000,
     },
@@ -585,20 +586,20 @@ F0402 11:52:01.968422  5809 lua_parameter_dictionary.cc:399] Check failed: HasKe
   use_imu_data = true,
   use_landmarks = false,
   use_nav_sat = false,
+  use_odometry = true,
 }
 *** Check failure stack trace: ***
-    @     0xffffbaf9d41c  google::LogMessage::Fail()
-    @     0xffffbafa46d0  google::LogMessage::SendToLog()
-    @     0xffffbaf9d0f4  google::LogMessage::Flush()
-    @     0xffffbaf9eebc  google::LogMessageFatal::~LogMessageFatal()
-    @     0xaaaae86b392c  (unknown)
-    @     0xaaaae86b398c  (unknown)
-    @     0xaaaae86b3c58  (unknown)
-    @     0xaaaae869ac74  (unknown)
-    @     0xaaaae85f743c  (unknown)
-    @     0xffffba5873fc  (unknown)
-    @     0xffffba5874cc  __libc_start_main
-    @     0xaaaae85fabf0  (unknown)
+    @     0xffff933ed41c  google::LogMessage::Fail()
+    @     0xffff933f46d0  google::LogMessage::SendToLog()
+    @     0xffff933ed0f4  google::LogMessage::Flush()
+    @     0xffff933eeebc  google::LogMessageFatal::~LogMessageFatal()
+    @     0xaaaad7ab392c  (unknown)
+    @     0xaaaad7ab398c  (unknown)
+    @     0xaaaad7ab3c9c  (unknown)
+    @     0xaaaad7ab3cf4  (unknown)
+    @     0xaaaad7a9b25c  (unknown)
+    @     0xaaaad79f743c  (unknown)
+    @     0xffff929d73fc  (unknown)
+    @     0xffff929d74cc  __libc_start_main
+    @     0xaaaad79fabf0  (unknown)
 Aborted (core dumped)
-
-
