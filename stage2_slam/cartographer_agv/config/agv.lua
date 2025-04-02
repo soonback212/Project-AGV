@@ -3,59 +3,43 @@ include "trajectory_builder.lua"
 
 options = {
   map_frame = "map",
-  tracking_frame = "base_link",  -- 로봇 중심 프레임 (TF와 일치 필요)
+  tracking_frame = "base_link",
   published_frame = "base_link",
   odom_frame = "odom",
-  provide_odom_frame = true,     -- Cartographer가 map→odom 퍼블리시
-  use_odometry = true,
+  provide_odom_frame = true,
   use_nav_sat = false,
   use_landmarks = false,
   publish_frame_projected_to_2d = false,
-
-  -- LaserScan
   num_laser_scans = 1,
-  laser_scan_topic = "scan",     -- 반드시 존재하는 topic인지 확인
+  laser_scan_topic = "scan",
   num_multi_echo_laser_scans = 0,
   num_subdivisions_per_laser_scan = 1,
-
-  -- IMU
   use_imu_data = true,
   imu_topic = "imu",
-
-  -- Odometry
   odometry_topic = "odom",
-
-  -- Publish rates
   pose_publish_period_sec = 5e-3,
   submap_publish_period_sec = 0.3,
   trajectory_publish_period_sec = 30e-3,
-
-  -- 샘플링 비율 (기본값 유지)
   rangefinder_sampling_ratio = 1.,
   odometry_sampling_ratio = 1.,
   fixed_frame_pose_sampling_ratio = 1.,
   imu_sampling_ratio = 1.,
   landmarks_sampling_ratio = 1.,
-
-  -- 메인 설정 객체
   map_builder = MAP_BUILDER,
   trajectory_builder = TRAJECTORY_BUILDER,
 }
 
 MAP_BUILDER.use_trajectory_builder_2d = true
 
--- LaserScan 기반 SLAM 설정
+-- 여기만 남기고, 위쪽 options 테이블엔 넣지 마!
 TRAJECTORY_BUILDER_2D.use_imu_data = true
 TRAJECTORY_BUILDER_2D.use_odometry = true
 TRAJECTORY_BUILDER_2D.min_range = 0.1
 TRAJECTORY_BUILDER_2D.max_range = 12.0
 TRAJECTORY_BUILDER_2D.missing_data_ray_length = 1.0
-
--- Scan Matching 정확도 향상
 TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = true
 TRAJECTORY_BUILDER_2D.motion_filter.max_angle_radians = math.rad(0.1)
 
--- Pose Graph 튜닝 (옵션)
 POSE_GRAPH.constraint_builder.min_score = 0.65
 POSE_GRAPH.constraint_builder.global_localization_min_score = 0.7
 
