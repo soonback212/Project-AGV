@@ -1,6 +1,8 @@
 include "map_builder.lua"
 include "trajectory_builder.lua"
 
+MAP_BUILDER.use_trajectory_builder_2d = true
+
 options = {
   map_builder = MAP_BUILDER,
   trajectory_builder = TRAJECTORY_BUILDER,
@@ -32,13 +34,9 @@ options = {
   odometry_topic = "odom"
 }
 
-MAP_BUILDER.use_trajectory_builder_2d = true
-
 TRAJECTORY_BUILDER_2D.use_imu_data = true
 TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = true
-TRAJECTORY_BUILDER_2D.use_trajectory_builder_2d = true
 TRAJECTORY_BUILDER_2D.num_accumulated_range_data = 1
 
 return options
-
 
