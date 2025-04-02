@@ -1,39 +1,54 @@
+Panels:
+  - Class: rviz/Displays
+    Name: Displays
+  - Class: rviz/Views
+    Name: Views
+
 Visualization Manager:
   Class: ""
   Name: root
   Enabled: true
-  Fixed Frame: map
+  UseSimulationTime: false
+
   Displays:
-    - Name: TF
-      Class: rviz/TF
+    - Class: rviz/TF
+      Name: TF
       Show Names: true
 
-    - Name: RobotModel
-      Class: rviz/RobotModel
+    - Class: rviz/RobotModel
+      Name: RobotModel
       Robot Description: robot_description
 
-    - Name: LaserScan
-      Class: rviz/LaserScan
-      Topic: /scan
+    - Class: rviz/LaserScan
+      Name: LaserScan
       Enabled: true
+      Topic: /scan
       Queue Size: 50
       Color: 255; 255; 255
       Size (m): 0.03
       Style: Flat Squares
       Axis: Z
 
-    - Name: Odometry
-      Class: rviz/Odometry
+    - Class: rviz/Odometry
+      Name: Odometry
       Topic: /odom
       Color: 0; 255; 255
       Keep: 100
 
-    - Name: Map
-      Class: rviz/Map
+    - Class: rviz/Map
+      Name: Map
       Topic: /map
       Alpha: 0.7
       Color Scheme: map
       Draw Behind: true
+
+    - Class: rviz/Grid
+      Name: Grid
+      Plane: XY
+      Cell Size: 0.5
+      Color: 160; 160; 160
+      Line Style: Lines
+      Normal Cell Count: true
 
   Tools:
     - Class: rviz/MoveCamera
@@ -48,5 +63,4 @@ Views:
   Current:
     Class: rviz/TopDownOrtho
     Target Frame: map
-    Value: 10.0
-
+    Value: 20.0
