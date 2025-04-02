@@ -12,7 +12,7 @@ import math
 class IMUParserNode(Node):
     def __init__(self):
         super().__init__('imu_parser_node')
-        self.ser = serial.Serial('/dev/ttyACM0', baudrate=115200, timeout=0.1)  # 포트 확인 필요
+        self.ser = serial.Serial('/dev/ttyACM0', baudrate=115200, timeout=0.1)
         self.get_logger().info(f"시리얼 포트 연결됨: {self.ser.port}")
 
         self.imu_pub = self.create_publisher(Imu, 'imu', 10)
@@ -28,11 +28,19 @@ class IMUParserNode(Node):
         self.th = 0.0
         self.last_time = self.get_clock().now()
 
+        # === 보정 관련 ===
+        self.bias_sample_count = 100
+        self.buffer_acc = []
+        self.buffer_gyro = []
+        self.acc_bias = [0.0, 0.0, 0.0]
+        self.gyro_bias = [0.0, 0.0, 0.0]
+        self.calibrated = False
+
     def read_serial_data(self):
         while self.ser.in_waiting >= 26:
             sync = self.ser.read(2)
             if sync != b'\xF5\xF5':
-                continue  # 헤더 일치할 때까지 반복
+                continue
 
             data = self.ser.read(24)
             if len(data) != 24:
@@ -45,15 +53,30 @@ class IMUParserNode(Node):
                 self.get_logger().error(f"struct 에러: {e}")
                 return
 
-            ax, ay, az = [v / 1000.0 for v in values[0:3]]
-            gx, gy, gz = [v / 1000.0 for v in values[3:6]]
-            mx, my, mz = [v / 1000.0 for v in values[6:9]]
+            # === 초기 보정 ===
+            if not self.calibrated:
+                self.buffer_acc.append(values[0:3])
+                self.buffer_gyro.append(values[3:6])
+                if len(self.buffer_acc) >= self.bias_sample_count:
+                    acc_sum = [sum(x) for x in zip(*self.buffer_acc)]
+                    gyro_sum = [sum(x) for x in zip(*self.buffer_gyro)]
+                    self.acc_bias = [v / self.bias_sample_count for v in acc_sum]
+                    self.gyro_bias = [v / self.bias_sample_count for v in gyro_sum]
+                    self.calibrated = True
+                    self.get_logger().info(f"IMU 보정 완료: acc_bias={self.acc_bias}, gyro_bias={self.gyro_bias}")
+                return  # 아직 보정 중이면 종료
+
+            # === 보정 적용 ===
+            ax = (values[0] - self.acc_bias[0]) / 1000.0
+            ay = (values[1] - self.acc_bias[1]) / 1000.0
+            az = (values[2] - self.acc_bias[2]) / 1000.0
+            gx = (values[3] - self.gyro_bias[0]) / 1000.0
+            gy = (values[4] - self.gyro_bias[1]) / 1000.0
+            gz = (values[5] - self.gyro_bias[2]) / 1000.0
             enc_l, enc_r = values[9], values[10]
 
-            # 로그로 값 확인
-            self.get_logger().info(f"[IMU] acc=({ax:.2f}, {ay:.2f}, {az:.2f})  gyro=({gx:.2f}, {gy:.2f}, {gz:.2f})  enc=({enc_l}, {enc_r})")
+            self.get_logger().info(f"[IMU] acc=({ax:.2f}, {ay:.2f}, {az:.2f}) gyro=({gx:.2f}, {gy:.2f}, {gz:.2f}) enc=({enc_l}, {enc_r})")
 
-            # === IMU 메시지 ===
             imu_msg = Imu()
             imu_msg.header.stamp = self.get_clock().now().to_msg()
             imu_msg.header.frame_id = 'imu_link'
@@ -63,27 +86,26 @@ class IMUParserNode(Node):
             imu_msg.angular_velocity.x = gx
             imu_msg.angular_velocity.y = gy
             imu_msg.angular_velocity.z = gz
-            imu_msg.orientation = Quaternion()  # orientation 생략 (필요 시 보정 가능)
+            imu_msg.orientation = Quaternion()  # orientation 미보정 상태
 
             self.imu_pub.publish(imu_msg)
 
-            # === 오도메트리 계산 ===
+            # 오도메트리 계산
             curr_time = self.get_clock().now()
             dt = (curr_time - self.last_time).nanoseconds / 1e9
             self.last_time = curr_time
 
-            d_left = (enc_l - self.prev_left) / 1000.0  # mm → m
+            d_left = (enc_l - self.prev_left) / 1000.0
             d_right = (enc_r - self.prev_right) / 1000.0
             self.prev_left = enc_l
             self.prev_right = enc_r
 
             d = (d_left + d_right) / 2.0
-            delta_th = (d_right - d_left) / 0.2  # 바퀴 간 거리 20cm 기준
+            delta_th = (d_right - d_left) / 0.2
             self.th += delta_th
             self.x += d * math.cos(self.th)
             self.y += d * math.sin(self.th)
 
-            # === 오도메트리 메시지 ===
             odom_msg = Odometry()
             odom_msg.header.stamp = curr_time.to_msg()
             odom_msg.header.frame_id = 'odom'
@@ -93,14 +115,13 @@ class IMUParserNode(Node):
             odom_msg.pose.pose.position.z = 0.0
 
             r = R.from_euler('z', self.th)
-            q = r.as_quat()  # [x, y, z, w]
+            q = r.as_quat()
             odom_msg.pose.pose.orientation = Quaternion(x=q[0], y=q[1], z=q[2], w=q[3])
             odom_msg.twist.twist.linear.x = d / dt
             odom_msg.twist.twist.angular.z = delta_th / dt
 
             self.odom_pub.publish(odom_msg)
 
-            # === TF 브로드캐스트 ===
             t = TransformStamped()
             t.header.stamp = curr_time.to_msg()
             t.header.frame_id = 'odom'
@@ -121,4 +142,3 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-
