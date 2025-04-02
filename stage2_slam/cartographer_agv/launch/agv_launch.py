@@ -2,7 +2,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
@@ -10,7 +10,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
 
     cartographer_dir = get_package_share_directory('cartographer_agv')
-    urdf_file = os.path.join(cartographer_dir, 'urdf', 'agv.urdf')  # xacro → urdf로 바꿔줘야 함
+    urdf_file = os.path.join(cartographer_dir, 'urdf', 'agv.urdf')  # 또는 agv.urdf.xacro
     rviz_config_file = os.path.join(cartographer_dir, 'rviz', 'agv_cartographer.rviz')
     config_dir = LaunchConfiguration('cartographer_config_dir', default=os.path.join(cartographer_dir, 'config'))
     configuration_basename = LaunchConfiguration('configuration_basename', default='agv.lua')
@@ -34,29 +34,33 @@ def generate_launch_description():
             launch_arguments={'use_sim_time': use_sim_time}.items()
         ),
 
-        # TF: map -> odom
+        # TF: map → odom
         Node(
             package='tf2_ros',
             executable='static_transform_publisher',
             arguments=['0', '0', '0', '0', '0', '0', 'map', 'odom'],
-            output='screen'
+            output='screen',
+            parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # TF: odom -> base_link
+        # TF: odom → base_link
         Node(
             package='tf2_ros',
             executable='static_transform_publisher',
             arguments=['0', '0', '0', '0', '0', '0', 'odom', 'base_link'],
-            output='screen'
+            output='screen',
+            parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # Robot State Publisher
+        # Robot State Publisher (TF 퍼블리시용)
         Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
-            parameters=[{'use_sim_time': use_sim_time}],
-            arguments=[urdf_file],
-            output='screen'
+            output='screen',
+            parameters=[
+                {'robot_description': Command(['xacro ', urdf_file])},  # urdf 파일이면 그냥 urdf_file만
+                {'use_sim_time': use_sim_time}
+            ]
         ),
 
         # Cartographer Node
@@ -87,18 +91,20 @@ def generate_launch_description():
             package='slam_control',
             executable='imu_parser_node',
             name='imu_parser_node',
-            output='screen'
+            output='screen',
+            parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # Motor Control
+        # Motor Control Node
         Node(
             package='slam_control',
             executable='motor_serial_node',
             name='motor_serial_node',
-            output='screen'
+            output='screen',
+            parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # RViz 별도 실행 (충돌 방지)
+        # RViz 실행
         ExecuteProcess(
             cmd=['rviz2', '-d', rviz_config_file],
             output='screen'
