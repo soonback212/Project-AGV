@@ -1,5 +1,4 @@
 import os
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess
 from launch.substitutions import LaunchConfiguration
@@ -9,9 +8,9 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
 
-    # 권장: src 경로에서 urdf 직접 읽기 (install 경로는 권한 문제 있음)
-    cartographer_dir = get_package_share_directory('cartographer_agv').replace('install', 'src')
-    urdf_file = os.path.join(cartographer_dir, 'urdf', 'agv.urdf')  # xacro 아님
+    # 절대 경로 기반 수정 (현재 경로에 맞춤)
+    cartographer_dir = '/home/jdamr/agv_ws/src/Project-AGV-main/stage2_slam/cartographer_agv'
+    urdf_file = os.path.join(cartographer_dir, 'urdf', 'agv.urdf')
     rviz_config_file = os.path.join(cartographer_dir, 'rviz', 'agv_cartographer.rviz')
     config_dir = LaunchConfiguration('cartographer_config_dir', default=os.path.join(cartographer_dir, 'config'))
     configuration_basename = LaunchConfiguration('configuration_basename', default='agv.lua')
@@ -19,17 +18,17 @@ def generate_launch_description():
     resolution = LaunchConfiguration('resolution', default='0.05')
     publish_period_sec = LaunchConfiguration('publish_period_sec', default='1.0')
 
-    ldlidar_launch_file_dir = os.path.join(get_package_share_directory('ldlidar_sl_ros2'), 'launch')
+    # LiDAR 드라이버 패키지명은 정확히 유지 (수정 X)
+    ldlidar_launch_file_dir = os.path.join('/home/jdamr/agv_ws/install/ldlidar_sl_ros2/share/ldlidar_sl_ros2/launch')
 
     return LaunchDescription([
-        # Declare arguments
         DeclareLaunchArgument('use_sim_time', default_value='false'),
         DeclareLaunchArgument('cartographer_config_dir', default_value=config_dir),
         DeclareLaunchArgument('configuration_basename', default_value=configuration_basename),
         DeclareLaunchArgument('resolution', default_value=resolution),
         DeclareLaunchArgument('publish_period_sec', default_value=publish_period_sec),
 
-        # LiDAR 노드 실행
+        # LiDAR 실행
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([ldlidar_launch_file_dir, '/ld14.launch.py']),
             launch_arguments={'use_sim_time': use_sim_time}.items()
@@ -53,7 +52,7 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # Robot State Publisher (권한 문제 없이 robot_description 처리)
+        # Robot State Publisher (URDF 직접 읽기)
         Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
@@ -77,9 +76,9 @@ def generate_launch_description():
             ]
         ),
 
-        # Occupancy Grid 생성 노드
+        # Occupancy Grid 퍼블리시
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([cartographer_dir, 'launch/occupancy_grid.launch.py']),
+            PythonLaunchDescriptionSource([os.path.join(cartographer_dir, 'launch', 'occupancy_grid.launch.py')]),
             launch_arguments={
                 'use_sim_time': use_sim_time,
                 'resolution': resolution,
@@ -87,7 +86,7 @@ def generate_launch_description():
             }.items(),
         ),
 
-        # IMU 파싱 노드
+        # IMU 노드
         Node(
             package='slam_control',
             executable='imu_parser_node',
@@ -96,7 +95,7 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # 모터 시리얼 통신 노드
+        # 모터 제어 노드
         Node(
             package='slam_control',
             executable='motor_serial_node',
@@ -111,3 +110,4 @@ def generate_launch_description():
             output='screen'
         )
     ])
+
