@@ -18,18 +18,17 @@ def generate_launch_description():
     resolution = LaunchConfiguration('resolution', default='0.05')
     publish_period_sec = LaunchConfiguration('publish_period_sec', default='1.0')
 
-    # LiDAR 드라이버 경로 (설치된 위치)
+    # LiDAR 드라이버 경로
     ldlidar_launch_file_dir = '/home/jdamr/agv_ws/install/ldlidar_sl_ros2/share/ldlidar_sl_ros2/launch'
 
     return LaunchDescription([
-        # 공통 Launch 설정값 선언
-        DeclareLaunchArgument('use_sim_time', default_value='false'),
+        DeclareLaunchArgument('use_sim_time', default_value='true'),
         DeclareLaunchArgument('cartographer_config_dir', default_value=config_dir),
         DeclareLaunchArgument('configuration_basename', default_value=configuration_basename),
         DeclareLaunchArgument('resolution', default_value=resolution),
         DeclareLaunchArgument('publish_period_sec', default_value=publish_period_sec),
 
-        # LiDAR 실행
+        # LiDAR
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([ldlidar_launch_file_dir, '/ld14.launch.py']),
             launch_arguments={'use_sim_time': use_sim_time}.items()
@@ -53,7 +52,7 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # Robot State Publisher (URDF 불러오기)
+        # Robot State Publisher
         Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
@@ -64,7 +63,7 @@ def generate_launch_description():
             ]
         ),
 
-        # Cartographer SLAM 실행
+        # Cartographer SLAM
         Node(
             package='cartographer_ros',
             executable='cartographer_node',
@@ -77,7 +76,7 @@ def generate_launch_description():
             ]
         ),
 
-        # Occupancy Grid 퍼블리시
+        # Occupancy Grid
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 os.path.join(cartographer_dir, 'launch', 'occupancy_grid.launch.py')
@@ -89,7 +88,7 @@ def generate_launch_description():
             }.items(),
         ),
 
-        # IMU 노드
+        # IMU
         Node(
             package='slam_control',
             executable='imu_parser_node',
@@ -98,7 +97,7 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # 모터 제어 노드
+        # Motor
         Node(
             package='slam_control',
             executable='motor_serial_node',
@@ -112,10 +111,11 @@ def generate_launch_description():
             period=5.0,
             actions=[
                 ExecuteProcess(
-                    cmd=['rviz2', '-d', rviz_config_file, '--ros-args', '--param', 'use_sim_time:=false'],
+                    cmd=['rviz2', '-d', rviz_config_file],
                     output='screen'
                 )
             ]
         )
     ])
+
 
