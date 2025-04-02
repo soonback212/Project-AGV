@@ -31,21 +31,21 @@
 - 조이스틱 또는 키보드로 수동 제어
 - `/cmd_vel` 토픽으로 모터 제어 노드 동작 확인
 - RViz에서 위치 및 센서 시각화 기초 연습
-- [Stage 1 README 보기](./stage1_teleop/README.md)
+- [Stage 1 README 보기](https://github.com/soonback212/Project-AGV/blob/main/Stage1_teleop/README.md)
 
 ### ✅ Stage 2 - SLAM 기반 자율주행
 - LiDAR + IMU + Encoder 조합으로 오도메트리 생성
 - Cartographer를 활용한 실시간 맵 생성 (`/map`)
 - TF 트리 구성: `map → odom → base_link`
 - RViz를 통해 경로 및 센서 정보 시각화
-- [Stage 2 README 보기](./stage2_slam/README.md)
+- [Stage 2 README 보기](https://github.com/soonback212/Project-AGV/blob/main/stage2_slam/README.md)
 
 ### ✅ Stage 3 - 딥러닝 기반 비전 제어
 - USB 카메라로 영상 입력 → 객체 인식 수행
 - YOLO, OpenCV, TensorRT 기반 추론 모델 연결
 - 인식 결과에 따라 `/cmd_vel`로 이동 명령
 - 사람 따라가기, 특정 마커 인식 후 이동 등 고도화
-- [Stage 3 README 보기 (작성 예정)](./stage3_vision_control/README.md)
+- [Stage 3 README 보기 (작성 예정)]([./stage3_vision_control/README.md](https://github.com/soonback212/Project-AGV/blob/main/Stage1_teleop/README.md))
 
 ---
 
@@ -77,8 +77,8 @@
 
 ## 📖 문서 정리
 
-- [Stage 1 README 보기](./stage1_teleop/README.md)
-- [Stage 2 README 보기](./stage2_slam/README.md)
+- [Stage 1 README 보기]([./stage1_teleop/README.md](https://github.com/soonback212/Project-AGV/blob/main/Stage1_teleop/README.md))
+- [Stage 2 README 보기]([./stage2_slam/README.md](https://github.com/soonback212/Project-AGV/blob/main/stage2_slam/README.md))
 - [Stage 3 README 보기 (작성 예정)](./stage3_vision_control/README.md)
 
 ---
