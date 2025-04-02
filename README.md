@@ -1,6 +1,91 @@
-jdamr@jdamr-pc:~/agv_ws$ ros2 run tf2_tools view_frames
-[INFO] [1743564444.985609985] [view_frames]: Listening to tf data for 5.0 seconds...
-[INFO] [1743564450.049588436] [view_frames]: Generating graph in frames.pdf file...
-[INFO] [1743564450.845722937] [view_frames]: Result:tf2_msgs.srv.FrameGraph_Response(frame_yaml="odom: \n  parent: 'map'\n  broadcaster: 'default_authority'\n  rate: 60.938\n  most_recent_transform: 1743564450.052032\n  oldest_transform: 1743564447.163857\n  buffer_length: 2.888\nbase_link: \n  parent: 'odom'\n  broadcaster: 'default_authority'\n  rate: 76.733\n  most_recent_transform: 1743564450.052032\n  oldest_transform: 1743564444.383049\n  buffer_length: 5.669\nbase_laser: \n  parent: 'base_link'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\nimu_link: \n  parent: 'base_link'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\nbody_link: \n  parent: 'odom'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\n")
+jdamr@jdamr-pc:~$ ros2 topic info /scan -v
+Type: sensor_msgs/msg/LaserScan
 
+Publisher count: 2
+
+Node name: ldlidar_publisher_ld14
+Node namespace: /
+Topic type: sensor_msgs/msg/LaserScan
+Endpoint type: PUBLISHER
+GID: 01.0f.69.43.55.0c.60.f1.00.00.00.00.00.00.12.03.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: ldlidar_publisher_ld14
+Node namespace: /
+Topic type: sensor_msgs/msg/LaserScan
+Endpoint type: PUBLISHER
+GID: 01.0f.b5.03.4e.1b.12.6c.00.00.00.00.00.00.12.03.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Subscription count: 4
+
+Node name: cartographer_node
+Node namespace: /
+Topic type: sensor_msgs/msg/LaserScan
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.69.43.79.0c.50.9a.00.00.00.00.00.00.2c.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: cartographer_node
+Node namespace: /
+Topic type: sensor_msgs/msg/LaserScan
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.b5.03.5a.1b.2e.40.00.00.00.00.00.00.2c.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: rviz
+Node namespace: /
+Topic type: sensor_msgs/msg/LaserScan
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.b5.03.6c.1c.71.1c.00.00.00.00.00.00.20.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: RELIABLE
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
+
+Node name: cartographer_node
+Node namespace: /
+Topic type: sensor_msgs/msg/LaserScan
+Endpoint type: SUBSCRIPTION
+GID: 01.0f.b5.03.ee.18.c3.6b.00.00.00.00.00.00.2c.04.00.00.00.00.00.00.00.00
+QoS profile:
+  Reliability: BEST_EFFORT
+  History (Depth): UNKNOWN
+  Durability: VOLATILE
+  Lifespan: Infinite
+  Deadline: Infinite
+  Liveliness: AUTOMATIC
+  Liveliness lease duration: Infinite
 
