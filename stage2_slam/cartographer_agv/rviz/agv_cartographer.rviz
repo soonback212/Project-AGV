@@ -23,7 +23,7 @@ Visualization Manager:
       Class: rviz/LaserScan
       Topic: /scan
       Enabled: true
-      Queue Size: 10
+      Queue Size: 50
       Color: 255; 255; 255
       Size (m): 0.03
       Style: Flat Squares
