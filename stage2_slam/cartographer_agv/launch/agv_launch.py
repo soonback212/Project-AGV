@@ -52,17 +52,6 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # Robot State Publisher
-        Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            output='screen',
-            parameters=[
-                {'robot_description': open(urdf_file).read()},
-                {'use_sim_time': use_sim_time}
-            ]
-        ),
-
         # Cartographer SLAM
         Node(
             package='cartographer_ros',
