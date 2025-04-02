@@ -1,7 +1,6 @@
-E0402 12:12:10.998735  6100 map_builder_bridge.cpp:180] Requested submap 0 from trajectory 0 but it does not exist: maybe it has been trimmed.
-[ERROR] [1743563530.999341648] [cartographer logger]: E0402 12:12:10.000000  6100 map_builder_bridge.cpp:180] Requested submap 0 from trajectory 0 but it does not exist: maybe it has been trimmed.
-[WARN] [1743563531.207404688] [cartographer logger]: W0402 12:12:11.000000  6100 tf_bridge.cpp:53] "base_link" passed to lookupTransform argument target_frame does not exist. 
-[WARN] [1743563531.493325143] [cartographer logger]: W0402 12:12:11.000000  6100 tf_bridge.cpp:53] "base_link" passed to lookupTransform argument target_frame does not exist. 
-[WARN] [1743563531.823287269] [cartographer logger]: W0402 12:12:11.000000  6100 tf_bridge.cpp:53] "base_link" passed to lookupTransform argument target_frame does not exist. 
+jdamr@jdamr-pc:~/agv_ws$ ros2 run tf2_tools view_frames
+[INFO] [1743564444.985609985] [view_frames]: Listening to tf data for 5.0 seconds...
+[INFO] [1743564450.049588436] [view_frames]: Generating graph in frames.pdf file...
+[INFO] [1743564450.845722937] [view_frames]: Result:tf2_msgs.srv.FrameGraph_Response(frame_yaml="odom: \n  parent: 'map'\n  broadcaster: 'default_authority'\n  rate: 60.938\n  most_recent_transform: 1743564450.052032\n  oldest_transform: 1743564447.163857\n  buffer_length: 2.888\nbase_link: \n  parent: 'odom'\n  broadcaster: 'default_authority'\n  rate: 76.733\n  most_recent_transform: 1743564450.052032\n  oldest_transform: 1743564444.383049\n  buffer_length: 5.669\nbase_laser: \n  parent: 'base_link'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\nimu_link: \n  parent: 'base_link'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\nbody_link: \n  parent: 'odom'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\n")
 
 
