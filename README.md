@@ -1,3 +1,5 @@
-The class required for this panel, 'rviz/Displays', could not be loaded.
-Error:
-According to the loaded plugin descriptions the class rviz/Displays with base class type rviz_common::Panel does not exist. Declared types are nav2_rviz_plugins/Navigation 2 slam_toolbox::SlamToolboxPlugin
+jdamr@jdamr-pc:~/agv_ws$ ros2 run tf2_tools view_frames
+[INFO] [1743559875.710837552] [view_frames]: Listening to tf data for 5.0 seconds...
+[INFO] [1743559880.771642740] [view_frames]: Generating graph in frames.pdf file...
+[INFO] [1743559880.790930964] [view_frames]: Result:tf2_msgs.srv.FrameGraph_Response(frame_yaml="base_link: \n  parent: 'odom'\n  broadcaster: 'default_authority'\n  rate: 10.199\n  most_recent_transform: 1743559880.763047\n  oldest_transform: 1743559875.762320\n  buffer_length: 5.001\nodom: \n  parent: 'map'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\nbase_laser: \n  parent: 'base_link'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\nimu_link: \n  parent: 'base_link'\n  broadcaster: 'default_authority'\n  rate: 10000.000\n  most_recent_transform: 0.000000\n  oldest_transform: 0.000000\n  buffer_length: 0.000\n")
+
