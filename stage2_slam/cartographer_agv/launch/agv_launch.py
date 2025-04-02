@@ -1,6 +1,6 @@
 import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess, TimerAction
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -8,7 +8,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='false')
 
-    # 절대 경로 기반 수정 (현재 경로에 맞춤)
+    # 절대 경로 설정
     cartographer_dir = '/home/jdamr/agv_ws/src/Project-AGV-main/stage2_slam/cartographer_agv'
     urdf_file = os.path.join(cartographer_dir, 'urdf', 'agv.urdf')
     rviz_config_file = os.path.join(cartographer_dir, 'rviz', 'agv_cartographer.rviz')
@@ -18,10 +18,11 @@ def generate_launch_description():
     resolution = LaunchConfiguration('resolution', default='0.05')
     publish_period_sec = LaunchConfiguration('publish_period_sec', default='1.0')
 
-    # LiDAR 드라이버 패키지명은 정확히 유지 (수정 X)
-    ldlidar_launch_file_dir = os.path.join('/home/jdamr/agv_ws/install/ldlidar_sl_ros2/share/ldlidar_sl_ros2/launch')
+    # LiDAR 드라이버 경로 (설치된 위치)
+    ldlidar_launch_file_dir = '/home/jdamr/agv_ws/install/ldlidar_sl_ros2/share/ldlidar_sl_ros2/launch'
 
     return LaunchDescription([
+        # 공통 Launch 설정값 선언
         DeclareLaunchArgument('use_sim_time', default_value='false'),
         DeclareLaunchArgument('cartographer_config_dir', default_value=config_dir),
         DeclareLaunchArgument('configuration_basename', default_value=configuration_basename),
@@ -34,7 +35,7 @@ def generate_launch_description():
             launch_arguments={'use_sim_time': use_sim_time}.items()
         ),
 
-        # TF: map → odom
+        # TF: map -> odom
         Node(
             package='tf2_ros',
             executable='static_transform_publisher',
@@ -43,7 +44,7 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # TF: odom → base_link
+        # TF: odom -> base_link
         Node(
             package='tf2_ros',
             executable='static_transform_publisher',
@@ -52,7 +53,7 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # Robot State Publisher (URDF 직접 읽기)
+        # Robot State Publisher (URDF 불러오기)
         Node(
             package='robot_state_publisher',
             executable='robot_state_publisher',
@@ -63,7 +64,7 @@ def generate_launch_description():
             ]
         ),
 
-        # Cartographer SLAM 노드
+        # Cartographer SLAM 실행
         Node(
             package='cartographer_ros',
             executable='cartographer_node',
@@ -78,7 +79,9 @@ def generate_launch_description():
 
         # Occupancy Grid 퍼블리시
         IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([os.path.join(cartographer_dir, 'launch', 'occupancy_grid.launch.py')]),
+            PythonLaunchDescriptionSource([
+                os.path.join(cartographer_dir, 'launch', 'occupancy_grid.launch.py')
+            ]),
             launch_arguments={
                 'use_sim_time': use_sim_time,
                 'resolution': resolution,
@@ -104,10 +107,15 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time}]
         ),
 
-        # RViz 실행
-        ExecuteProcess(
-            cmd=['rviz2', '-d', rviz_config_file],
-            output='screen'
+        # RViz 실행 (5초 지연)
+        TimerAction(
+            period=5.0,
+            actions=[
+                ExecuteProcess(
+                    cmd=['rviz2', '-d', rviz_config_file, '--ros-args', '--param', 'use_sim_time:=false'],
+                    output='screen'
+                )
+            ]
         )
     ])
 
