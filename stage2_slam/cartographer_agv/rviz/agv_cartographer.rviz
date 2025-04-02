@@ -1,16 +1,9 @@
-Panels:
-  - Class: rviz/Displays
-    Name: Displays
-  - Class: rviz/Views
-    Name: Views
-
 Visualization Manager:
   Class: ""
+  Name: root
+  Enabled: true
+  Fixed Frame: map
   Displays:
-    - Name: Global Options
-      Class: rviz/Displays
-      Fixed Frame: map
-
     - Name: TF
       Class: rviz/TF
       Show Names: true
@@ -42,8 +35,6 @@ Visualization Manager:
       Color Scheme: map
       Draw Behind: true
 
-  Name: root
-  Enabled: true
   Tools:
     - Class: rviz/MoveCamera
     - Class: rviz/Interact
@@ -58,3 +49,4 @@ Views:
     Class: rviz/TopDownOrtho
     Target Frame: map
     Value: 10.0
+
