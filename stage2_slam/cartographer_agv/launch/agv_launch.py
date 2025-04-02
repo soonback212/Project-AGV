@@ -19,6 +19,10 @@ def generate_launch_description():
 
     ldlidar_launch_file_dir = '/home/jdamr/agv_ws/install/ldlidar_sl_ros2/share/ldlidar_sl_ros2/launch'
 
+    # URDF 내용 읽기
+    with open(urdf_file, 'r') as file:
+        robot_description_content = file.read()
+
     return LaunchDescription([
         DeclareLaunchArgument('use_sim_time', default_value='false'),
         DeclareLaunchArgument('cartographer_config_dir', default_value=config_dir),
@@ -30,6 +34,18 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([ldlidar_launch_file_dir, '/ld14.launch.py']),
             launch_arguments={'use_sim_time': use_sim_time}.items()
+        ),
+
+        # robot_state_publisher 실행
+        Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='screen',
+            parameters=[
+                {'robot_description': robot_description_content},
+                {'use_sim_time': use_sim_time}
+            ]
         ),
 
         # Cartographer SLAM 실행
